@@ -1,12 +1,11 @@
 import os
 
 find_path = "/home/pi/RetroPie/roms/"
-#replace_path = "y:\\roms\\"
 replace_path = "x:\\"
 collection_folder = "w:\\"
 WINDOWS_LINE_ENDING = '\r\n'
 UNIX_LINE_ENDING = '\n'
-IGNORED_FOLDERS = ('snap', 'mixart', 'media','genesis','segacd')
+IGNORED_FOLDERS = ('snap', 'mixart', 'media')
 
 def delete_file(file):
     if file != None and os.path.exists(file):
@@ -73,7 +72,7 @@ def delete_collection(file):
 
 def update_collection(file):
     print("Reading "+file+"...")
-    reader = open(file, 'r')
+    reader = open(file, 'r', encoding='utf-8')
     lines = reader.readlines()
 
     remove_list = list()
@@ -85,7 +84,7 @@ def update_collection(file):
 
     if len(remove_list) > 0:
         lines = [x for x in lines if x not in remove_list]
-        writer = open(file, 'w', newline=UNIX_LINE_ENDING)
+        writer = open(file, 'w', newline=UNIX_LINE_ENDING, encoding='utf-8')
         writer.writelines(lines)
         writer.close()
 

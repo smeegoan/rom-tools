@@ -5,12 +5,12 @@ minimum_rating = 49
 roms_folder = "x:\\"
 collections_folder = "w:\\"
 roms_folder_in_collection = "/home/pi/RetroPie/roms/"
-IGNORED_FOLDERS = ('snap', 'mixart', 'media','genesis','segacd')
+IGNORED_FOLDERS = ('snap', 'mixart', 'media','genesis','segacd','mega32x')
 keywords = {"batman": "batman",
             "castlevania": "castlevania",
-            "contra": "contra",
             "crashbandicoot": "crash bandicoot",
             "donkeykong": "donkey kong",
+            "doubledragon": "double dragon",
             "dragonball": "dragon ball",
             "finalfight": "final fight",
             "fatalfury": "fatal fury",
@@ -19,11 +19,10 @@ keywords = {"batman": "batman",
             "fzero": "fzero",
             "goldenaxe": "golden axe",
             "jurassicpark": "jurassic park",
-            "kingoffighters": "king of fighters",
+            "kof": "king of fighters",
             "mario": "mario ",
             "megaman": "mega man",
             "metalslug": "metal slug",
-            "metroid": "metroid",
             "mortalkombat": "mortal kombat",
             "ninja": "ninja",
             "princeofpersia": "prince of persia",
@@ -97,7 +96,7 @@ def read_gamelist(file):
                     file = os.path.join(collections_folder,
                                         "custom-"+collection+".cfg")
                     if os.path.exists(file):
-                        reader = open(file, 'r')
+                        reader = open(file, 'r', encoding='utf-8')
                         collections[collection] = reader.readlines()
                     else:
                         collections[collection] = list()
@@ -109,7 +108,7 @@ def main(folder_path):
     for collection in collections:
         lines = list(set(collections[collection]))
         file = os.path.join(collections_folder, "custom-"+collection+".cfg")
-        writer = open(file, 'w', newline=UNIX_LINE_ENDING)
+        writer = open(file, 'w', newline=UNIX_LINE_ENDING, encoding='utf-8')
         writer.writelines(lines)
         writer.close()
         print("Wrote " + file + ": " +

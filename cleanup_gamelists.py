@@ -3,16 +3,15 @@ import os
 
 minimum_rating = 49
 roms_folder = "x:\\"
-#roms_folder = "y:\\roms\\"
-IGNORED_FOLDERS = ('snap', 'mixart', 'media','genesis','segacd')
+IGNORED_FOLDERS = ('snap', 'mixart', 'media')
 
 
-def delete_file(file, soft=False):
+def delete_file(file, suffix=None):
     if file != None and os.path.exists(file):
         try:
-            if soft:
-                print("Manually delete "+file+".TODELETE")
-                os.rename(file, file+".TODELETE")
+            if suffix != None:
+                print("Manually delete "+file+suffix)
+                os.rename(file, file+suffix)
             else:
                 print("Deleting "+file+"...")
                 os.remove(file)
@@ -80,8 +79,9 @@ def read_gamelist(file):
             delete_game(folder, remove_list, game, path)
         elif id in ids:
             print(path + " is a duplicate of " + ids.get(id))
-            delete_game(folder, remove_list, game, path)
-        elif id != "0" and not is_multi_disc(path):  # ignore multi disc
+            remove_list.append(game)
+            delete_file(path, ".DUPLICATE")
+        elif id != "0":# and not is_multi_disc(path):  # ignore multi disc
             ids[id] = path
     root = tree.getroot()
     for game in remove_list:
@@ -103,7 +103,7 @@ def delete_game(folder, remove_list, game, path):
     file_size = round(file_size/1048576, 2)
     delete_file(video)
     delete_file(image)
-    delete_file(path, True)
+    delete_file(path, ".LOWRATING")
     print("Freed " + str(file_size) + "MB")
 
 
