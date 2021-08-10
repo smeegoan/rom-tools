@@ -2,6 +2,7 @@ from xml.etree.ElementTree import ElementTree
 import os
 import datetime
 import re
+import sys
 
 minimum_rating = 49
 roms_folder = "x:\\"
@@ -60,30 +61,34 @@ def read_gamelist(file):
     folder = os.path.dirname(file)
     games = tree.findall(".//game")
     for game in games:
-        path = get_node_value(game, ".//path")
+        path = os.path.basename(get_node_value(game, ".//path"))
         name = get_node_value(game, ".//name")
-        name = re.sub("[/\\?*|]", "", name)
+        name = re.sub("[/\\?*|\"]", "", name)
         developer = get_node_value(game, ".//developer")
-        developer = re.sub("[/\\?*|]", "", developer)
+        developer = re.sub("[/\\?*|\"]", "", developer)
         developer = get_formatted_value(developer)
         name = name.replace(developer, "").strip()
         extension = os.path.splitext(path)[1]
         new_path = ("./"+name + " "+ developer).strip()+extension
-        new_path = re.sub("[:]", "-", new_path)
-        if os.path.basename(new_path) == os.path.basename(path):
+        new_path = new_path.replace(":", " -").replace("  ", " ")
+        if os.path.basename(new_path).lower() == path.lower():
             continue
         set_node_value(game, ".//path", new_path)
-        print("Renaming " + path + " to "+new_path)
         path_file = get_node_file(folder, path)
         if os.path.isfile(path_file):
             new_path_file = get_node_file(folder, new_path)
-            if os.path.isfile(new_path_file):
-                suffix = ".DUPLICATE"
-                while os.path.isfile(new_path_file+suffix):
-                    suffix += "1"
-                os.rename(path_file, new_path_file+suffix)
-            else:
-                os.rename(path_file, new_path_file)
+            print("Renaming '" + path_file + "' to '"+new_path+"'")
+            try:
+                if os.path.isfile(new_path_file):
+                    suffix = ".DUPLICATE"
+                    while os.path.isfile(new_path_file+suffix):
+                        suffix += "1"
+                    os.rename(path_file, new_path_file+suffix)
+                else:
+                    os.rename(path_file, new_path_file)
+            except:
+                    print("Oops!", sys.exc_info()[0], "occurred.")
+                    print()
     tree.write(file)
 
 

@@ -65,7 +65,8 @@ def read_gamelist(file):
         else:
             id = "0"
         rating = get_node_value(game, "rating")
-        path = get_node_file(folder, get_node_value(game, ".//path"))
+        path = os.path.basename(get_node_value(game, ".//path"))
+        path = get_node_file(folder, path)
         if rating != None:
             rating = float(rating)*100
         else:
